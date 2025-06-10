@@ -1,0 +1,97 @@
+<% layout('/layouts/boilerplate') %>
+
+    <div class="row">
+        <div class="col-12 col-lg-8 offset-lg-2 mt-3 mb-4">
+
+            <h3 class="mb-4">Edit This Id: <%= listing.id %>
+            </h3>
+            <div>
+                <form method="POST" action="/VerifiedVilla/<%= listing._id %>?_method=PUT" class="needs-validation"
+                    novalidate enctype="multipart/form-data">
+                    <div>
+                        <label for="title" class="form-label">Tittle:</label>
+                        <input type="text" name="listing[title]" value="<%= listing.title %>"
+                            placeholder="Enter Your Title" class="form-control" required>
+                        <div class="invalid-feedback">
+                            You should enter a vaild title.
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="description" class="form-label">Description:</label>
+                        <textarea name="listing[description]" rows="3" placeholder="Enter Your Description"
+                            class="form-control" required><%= listing.description %></textarea>
+                        <div class="invalid-feedback">
+                            You should enter a vaild description.
+                        </div>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <img src="<%= listing.image.url %>" alt="listing-img" style="height: 7rem;">
+                    </div>
+                    <div>
+                        <label for="image" class="form-label">Upload Image:</label>
+                        <input type="file" name="listing[image]" class="form-control">
+                        <div class="invalid-feedback">
+                            You should enter a vaild link.
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="location" class="form-label">Location:</label>
+                        <input type="text" name="listing[location]" value="<%= listing.location %>"
+                            placeholder="Enter Your location" class="form-control" required>
+                        <div class="invalid-feedback">
+                            You should enter a vaild location.
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div>
+                                <label for="price" class="form-label">Price:</label>
+                                <input type="text" name="listing[price]" value="<%= listing.price %>"
+                                    placeholder="Enter Your price" class="form-control" required>
+                                <div class="invalid-feedback">
+                                    You should enter a vaild price.
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-md-8">
+                            <div>
+                                <label for="country" class="form-label">Country:</label>
+                                <input type="text" name="listing[country]" value="<%= listing.country %>"
+                                    placeholder="Enter Your Country" class="form-control" required>
+                                <div class="invalid-feedback">
+                                    You should enter a vaild country.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                           <label for="category" class="form-label">Category:</label>
+                            <select name="listing[category]" id="category" class="form-select" required>
+                                <option value="">Select Category</option>
+                                <option value="Home" <%= listing.category === 'Home' ? 'selected' : '' %>>Home</option>
+                                <option value="Trending" <%= listing.category === 'Trending' ? 'selected' : '' %>>Trending</option>
+                                <option value="Iconic-Cities" <%= listing.category === 'Iconic-Cities' ? 'selected' : '' %>>Iconic-Cities</option>
+                                <option value="Farms" <%= listing.category === 'Farms' ? 'selected' : '' %>>Farms</option>
+                                <option value="Arctics" <%= listing.category === 'Arctics' ? 'selected' : '' %>>Arctics</option>
+                                <option value="Mountains" <%= listing.category === 'Mountains' ? 'selected' : '' %>>Mountains</option>
+                                <option value="Swimming Pool" <%= listing.category === 'Swimming Pool' ? 'selected' : '' %>>Beach</option>
+                                <option value="Camp" <%= listing.category === 'Camp' ? 'selected' : '' %>>Camp</option>
+                                <option value="Forest" <%= listing.category === 'Forest' ? 'selected' : '' %>>Forest</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                You should enter a vaild category.
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <button class="btn btn-dark">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>

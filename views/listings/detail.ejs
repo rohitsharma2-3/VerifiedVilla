@@ -1,0 +1,96 @@
+<% layout('/layouts/boilerplate') %>
+    <div class="row">
+        <div class="col-12 col-lg-8 mt-4 offset-lg-2">
+            <h3>
+                <%= listing.title %>
+            </h3>
+            <div class="card2">
+                <img src="<%= listing.image.url %>" class="card-img-top" alt="Property_image" style="height: 18rem;">
+                <div class="card-body">
+                    <p class="card-text mt-2">
+                    <p class="card-text">Owned By: <b>
+                            <%= listing.owner.username %>
+                        </b></p>
+                    <p class="card-text">
+                        <%= listing.description %> <br>
+                    </p>
+                    <%= listing.location %> / <%= listing.country %> <br>
+                            ₹<%= listing.price.toLocaleString("en-IN")%> / night
+                                </p>
+                                <% if(curUser && curUser._id.equals(listing.owner._id)) {%>
+
+                                    <div class="d-btns mb-5">
+                                        <a href="/VerifiedVilla/<%= listing._id %>/edit"
+                                            class="btn btn1 btn-dark">Edit</a>
+                                        <form method="POST" action="/VerifiedVilla/<%= listing._id %>?_method=DELETE">
+                                            <button class="btn btn-dark">Delete</button>
+                                        </form>
+                                    </div>
+                                    <% } %>
+
+                </div>
+            </div>
+            <div class="review-card">
+                <div class="reviews">
+                    <hr>
+                    <% if(curUser) { %>
+                        <h5 class="card-title">Leave a review</h5>
+                        <form method="POST" action="/VerifiedVilla/<%= listing._id %>/review">
+
+                            <br>
+                            <label for="range" class="mt-3">Give Ratings:</label>
+                            <fieldset class="starability-growRotate">
+                                <input type="radio" id="no-rate" class="input-no-rate" name="range" value="1" checked
+                                    aria-label="No rating." />
+                                <input type="radio" id="first-rate1" name="range" value="1" />
+                                <label for="first-rate1" title="Terrible">1 star</label>
+                                <input type="radio" id="first-rate2" name="range" value="2" />
+                                <label for="first-rate2" title="Not good">2 stars</label>
+                                <input type="radio" id="first-rate3" name="range" value="3" />
+                                <label for="first-rate3" title="Average">3 stars</label>
+                                <input type="radio" id="first-rate4" name="range" value="4" />
+                                <label for="first-rate4" title="Very good">4 stars</label>
+                                <input type="radio" id="first-rate5" name="range" value="5" />
+                                <label for="first-rate5" title="Amazing">5 stars</label>
+                            </fieldset>
+                            <br>
+
+                            <label for="content">Content:</label>
+                            <textarea id="content" rows="6" name="content" placeholder="Enter Your Experience"
+                                required></textarea>
+                            <br>
+
+
+                            <button class="btn review-card-button btn-dark">Add Review</button>
+                            <hr>
+                        </form>
+                        <% } %>
+
+                </div>
+            </div>
+
+            <div class="row col-12">
+                <% if(listing.review.length){ %>
+                    <h4>All Review</h4>
+                    <% for(let review of listing.review) {%>
+                        <div class="col-12 col-md-5 ms-3 rounded review-container">
+                            <h5>@<%= review.author.username %>
+                            </h5>
+                            <p class="starability-result" data-rating="<%= review.range %>">
+                            </p>
+                            <p class="card-title">
+                                <%= review.content %>
+                            </p>
+                            <br>
+                            <% if(curUser && review.author.equals(curUser._id)) {%>
+                                <form method="POST"
+                                    action="/VerifiedVilla/<%= listing._id %>/review/<%= review._id %>?_method=DELETE">
+                                    <button class="btn btn-dark mt-3">Delete</button>
+                                </form>
+                                <% } %>
+                        </div>
+                        <% } %>
+                            <% } %>
+            </div>
+        </div>
+    </div>

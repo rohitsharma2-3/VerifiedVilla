@@ -1,0 +1,115 @@
+<% layout('/layouts/boilerplate') %>
+    <style>
+        .filter-alin a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .filter-container.active {
+            border-bottom: 1px solid #ff5a5f;
+            color: #ff5a5f;
+            font-weight: bold;
+        }
+    </style>
+
+    <div id="filters">
+        <div class="filter-alin">
+            <a href="/verifiedVilla" class="filter-container <%= !selectedCategory ? 'active' : '' %>">
+                <div><i class="fa-solid fa-house"></i></div>
+                <p>All</p>
+            </a>
+
+            <a href="/verifiedVilla?category=Trending"
+                class="filter-container <%= selectedCategory === 'Trending' ? 'active' : '' %>">
+                <div><i class="fa-solid fa-fire"></i></div>
+                <p>Trending</p>
+            </a>
+            <a href="/verifiedVilla?category=Farms"
+                class="filter-container  <%= selectedCategory === 'Farms' ? 'active' : '' %> ">
+                <div><i class="fa-solid fa-tractor"></i></div>
+                <p>Farms</p>
+            </a>
+            <a href="/verifiedVilla?category=Arctics"
+                class="filter-container <%= selectedCategory === 'Arctics' ? 'active' : '' %>">
+                <div><i class="fa-solid fa-snowflake"></i></div>
+                <p>Arctics</p>
+            </a>
+            <a href="/verifiedVilla?category=Mountains"
+                class="filter-container <%= selectedCategory === 'Mountains' ? 'active' : '' %>">
+                <div><i class="fa-solid fa-mountain"></i></div>
+                <p>Mountains</p>
+            </a>
+            <a href="/verifiedVilla?category=Camp"
+                class="filter-container <%= selectedCategory === 'Camp' ? 'active' : '' %>">
+                <div><i class="fa-solid fa-tent"></i></div>
+                <p>Camp</p>
+            </a>
+            <a href="/verifiedVilla?category=Forest"
+                class="filter-container <%= selectedCategory === 'Forest' ? 'active' : '' %>">
+                <div><i class="fa-solid fa-tree"></i></div>
+                <p>Forest</p>
+            </a>
+            <a href="/verifiedVilla?category=Iconic-Cities"
+                class="filter-container <%= selectedCategory === 'Iconic-Cities' ? 'active' : '' %>">
+                <div><i class="fa-solid fa-mountain-city"></i></div>
+                <p>Cities</p>
+            </a>
+            <a href="/VerifiedVilla?category=Home"
+                class="<%= selectedCategory === 'Home' ? 'active' : '' %> filter-container">
+                <div><i class="fa-solid fa-hotel"></i></div>
+                <p>Villa</p>
+            </a>
+            <a href="/verifiedVilla?category=Swimming Pool"
+                class="filter-container <%= selectedCategory === 'Swimming Pool' ? 'active' : '' %> ">
+                <div><i class="fa-solid fa-person-swimming"></i></div>
+                <p>Beach</p>
+            </a>
+
+        </div>
+
+        <div>
+            <div class="form-check form-switch form-check-reverse">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Display total after taxes</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-2">
+        <% for(let listing of allListing) { %>
+            <a href="/VerifiedVilla/<%= listing._id %>/detail" class="b-anchor">
+                <div class="card col">
+                    <img src="<%= listing.image.url %>" class="card-img-top" style="height: 20rem">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <b>
+                                <%= listing.title %>
+                            </b><br>
+                            <%= listing.country %><br>
+                                <span class="price-container">
+                                    ₹<%= listing.price.toLocaleString('en-IN') %> / night
+                                        <i class="gst" style="font-size: 0.9rem; color: #6c757d;">+18% GST</i>
+                                </span>
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <% } %>
+    </div>
+
+
+
+
+
+    <script>
+        const switchButton = document.querySelector('#flexSwitchCheckDefault');
+        const gstLabels = document.querySelectorAll('.gst');
+
+        switchButton.addEventListener('change', () => {
+            gstLabels.forEach(el => {
+                el.style.opacity = switchButton.checked ? '1' : '0';
+            });
+        });
+
+
+    </script>
