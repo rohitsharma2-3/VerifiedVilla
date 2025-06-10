@@ -29,7 +29,7 @@ async function main() {
     await mongoose.connect(mongoDb);
 }
 
-let port = 8080;
+let port = process.env.PORT || 8080;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
@@ -103,8 +103,6 @@ app.use((err, req, res, next) => {
     res.status(status).render('listings/error.ejs', { message });
 });
 
-
-
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:8080/verifiedVilla`);
+    console.log(`Server is running on port ${port}`);
 });
