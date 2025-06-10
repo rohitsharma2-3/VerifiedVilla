@@ -106,5 +106,5 @@ app.use((err, req, res, next) => {
 
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}/verifiedVilla`);
+    console.log(`Server is running on http://localhost:8080/verifiedVilla`);
 });
