@@ -1,108 +1,106 @@
-if (process.env.NODE_ENV != 'production') {
-    require('dotenv').config()
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
 }
-let express = require('express');
-let app = express();
-let path = require('path');
+
+const express = require('express');
+const app = express();
+const path = require('path');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
-const ExpressError = require('./utils/ExpressError.js');
-const session = require('express-session')
-const passport = require('passport')
-const LocalStrategy = require('passport-local')
-const User = require('./models/user.js')
-const listing = require('./routes/listings.js');
-const review = require('./routes/review.js');
-const user = require('./routes/user.js');
+const session = require('express-session');
 const flash = require('connect-flash');
-const MongoStore = require('connect-mongo')
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const MongoStore = require('connect-mongo');
+const ExpressError = require('./utils/ExpressError.js');
 
+// Models and Routes
+const User = require('./models/user.js');
+const listingRoutes = require('./routes/listings.js');
+const reviewRoutes = require('./routes/review.js');
+const userRoutes = require('./routes/user.js');
 
+// Environment Variables
+const mongoDb = process.env.MONGO_DB;
+const secret = process.env.SECRET_CODE || 'fallbackSecret';
+const port = process.env.PORT || 8080;
 
-const mongoDb = process.env.MONGO_DB
-main()
-    .then(() => console.log('MongoDB Connected'))
-    .catch((err) => console.log(err));
-
+// Database Connection
 async function main() {
     await mongoose.connect(mongoDb);
+    console.log('MongoDB Connected');
 }
+main().catch(err => console.error('MongoDB Error:', err));
 
-let port = process.env.PORT || 8080;
-
+// View Engine Setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
+app.engine('ejs', ejsMate);
+
+// Middleware
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
-app.engine('ejs', ejsMate);
 
+// Session Store
 const store = MongoStore.create({
     mongoUrl: mongoDb,
-    crypto: {
-        secret: process.env.SECRET_CODE
-    },
-    touchAfter: 24 * 3600
-})
+    crypto: { secret },
+    touchAfter: 24 * 3600 // in seconds
+});
 
-store.on('error', () => {
-    console.log("Error => ")
-})
+store.on('error', (err) => {
+    console.error("Session Store Error:", err);
+});
 
-const sessionOption = {
+const sessionOptions = {
     store,
-    secret: process.env.SECRET_CODE,
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
-        expiers: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 1 week
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true
     }
-}
+};
 
+app.use(session(sessionOptions));
+app.use(flash());
 
-app.use(session(sessionOption))
-app.use(flash())
-app.use(passport.initialize())
-app.use(passport.session())
-
-
-
-passport.use(new LocalStrategy(User.authenticate()))
+// Passport Config
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
-
+// Flash & Current User Middleware
 app.use((req, res, next) => {
-    res.locals.successMsg = req.flash('success')
-    res.locals.errorMsg = req.flash('error')
-    res.locals.curUser = req.user
-    next()
-})
+    res.locals.successMsg = req.flash('success');
+    res.locals.errorMsg = req.flash('error');
+    res.locals.curUser = req.user;
+    next();
+});
 
+// Routes
+app.use('/verifiedVilla', listingRoutes);
+app.use('/verifiedVilla', reviewRoutes);
+app.use('/', userRoutes);
 
-
-app.use('/verifiedVilla', listing);
-app.use('/verifiedVilla', review);
-app.use('/', user);
-
-
-// 404 handler
+// 404 Handler
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));
 });
 
-
-
-// Global error handler
+// Global Error Handler
 app.use((err, req, res, next) => {
-    let { status = 500, message = "Something went wrong!" } = err;
+    const { status = 500, message = "Something went wrong!" } = err;
     res.status(status).render('listings/error.ejs', { message });
 });
 
+// Start Server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

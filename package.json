@@ -1,18 +1,18 @@
 {
   "name": "airbnb",
   "version": "1.0.0",
-  "description": "",
+  "description": "Airbnb-style MERN application for lodging and travel",
   "main": "app.js",
   "type": "commonjs",
   "scripts": {
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["airbnb", "mern", "express", "mongodb"],
+  "author": "Your Name",
   "license": "ISC",
   "engines": {
-    "node": "22.12.0"
+    "node": "18.x"
   },
   "dependencies": {
     "cloudinary": "^1.30.0",
