@@ -47,7 +47,7 @@ app.use(express.urlencoded({ extended: true }));
 const store = MongoStore.create({
     mongoUrl: mongoDb,
     crypto: { secret },
-    touchAfter: 24 * 3600 // in seconds
+    touchAfter: 24 * 3600 
 });
 
 store.on('error', (err) => {
@@ -60,7 +60,7 @@ const sessionOptions = {
     resave: false,
     saveUninitialized: true,
     cookie: {
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 1 week
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, 
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true
     }
